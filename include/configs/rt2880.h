@@ -28,9 +28,9 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-#define CFG_PROMPT "VoCore2 > "
+#define CFG_PROMPT "GnuBee > "
 
-#define CONFIG_BOOTDELAY	10	/* autoboot after 10 seconds	*/
+#define CONFIG_BOOTDELAY	5	/* autoboot after 5 seconds	*/
 
 #define CONFIG_NET_MULTI
 
@@ -38,15 +38,15 @@
 
 #define CONFIG_LED 44
 
-#define CONFIG_BAUDRATE	115200
+#define CONFIG_BAUDRATE	57600
 
 #define CHANGEABLE_BAUDRATE
 
-#define CONFIG_SERVERIP 192.168.1.3
+#define CONFIG_SERVERIP 192.168.1.2
 
-#define CONFIG_IPADDR 192.168.1.123
+#define CONFIG_IPADDR 192.168.1.213
 
-#define CONFIG_ETHADDR "00:AA:BB:CC:DD:10"
+#define CONFIG_ETHADDR "00:AA:BB:CC:DD:13"
 
 #define SERIAL_CLOCK_DIVISOR 16
 

@@ -602,6 +602,20 @@ init_fnc_t *init_sequence[] = {
 #endif
 
 //  
+void printBanner(void)
+{
+    printf("\n\n");
+    printf("  ██████╗  ███╗   ██╗ ██╗   ██╗ ██████╗  ███████╗ ███████╗\n");
+    printf(" ██╔════╝  ████╗  ██║ ██║   ██║ ██╔══██╗ ██╔════╝ ██╔════╝\n");
+    printf(" ██║  ███╗ ██╔██╗ ██║ ██║   ██║ ██████╔╝ █████╗   █████╗\n");
+    printf(" ██║   ██║ ██║╚██╗██║ ██║   ██║ ██╔══██╗ ██╔══╝   ██╔══╝\n");
+    printf(" ╚██████╔╝ ██║ ╚████║ ╚██████╔╝ ██████╔╝ ███████╗ ███████╗\n");
+    printf("  ╚═════╝  ╚═╝  ╚═══╝  ╚═════╝  ╚═════╝  ╚══════╝ ╚══════╝\n");
+	printf("\n");
+    printf("-------------------------------------------------------------------------\n");
+    printf("             https://github.com/gnubee-git\n");
+    printf("-------------------------------------------------------------------------\n");
+}
 __attribute__((nomips16)) void board_init_f(ulong bootflag)
 {
 	gd_t gd_data, *id;
@@ -2494,7 +2508,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			argv[2] = "0";
 			sprintf(addr_str, "0x%X", CFG_LOAD_ADDR);
 			argv[3] = &addr_str[0];
-			argv[4] = "root_uImage";
+			argv[4] = "gnubee.bin";
 			setenv("autostart", "no");
 			if(do_fat_fsload(cmdtp, 0, argc, argv)){
 				printf("Upgrade F/W from USB storage failed.\n");
