@@ -2147,7 +2147,7 @@ void rt305x_esw_init(void)
 #endif
 	RALINK_REG(RT2880_AGPIOCFG_REG) = i;
 
-	printf("RESET MT7628 PHY!!!!!!");
+	//printf("RESET MT7628 PHY!!!!!!");
 	// reset phy
 	i = RALINK_REG(RT2880_RSTCTRL_REG);
 	i = i | RSTCTRL_EPHY_RST;

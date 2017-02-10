@@ -19,13 +19,65 @@
 #define RT2880_UART1	0x0C00  /* UART Lite */
 #define RT2880_UART2	0x0D00  /* UART Lite */
 #define RT2880_UART3	0x0E00  /* UART Lite */
+
+
+/* on HLK modules, the following configuration of UART pins:
+# 
+# RT2880_UART1 = UART0
+# RT2880_UART2 = UART1
+# RT2880_UART3 = UART2
+#
+# if it does not match your module (omega2/linkit) or your custom board, 
+# create an issue with the correction :3 
+*/
+
+#if defined (UART_CONF_0)
+#define CFG_RT2880_CONSOLE	RT2880_UART1
+#endif
+
+#if defined (UART_CONF_1)
+#define CFG_RT2880_CONSOLE	RT2880_UART2
+#endif
+
+#if defined (UART_CONF_2)
 #define CFG_RT2880_CONSOLE	RT2880_UART3
+#endif
+
 #else
 #define RT2880_UART1	0x0500
 #define RT2880_UART2	0x0C00  /* UART Lite */
 #define CFG_RT2880_CONSOLE	RT2880_UART2
 #endif
 
+/* UART speed config */
+
+#if defined (UART_SCONF_9600)
+#define CONFIG_BAUDRATE	9600
+#endif
+
+#if defined (UART_SCONF_19200)
+#define CONFIG_BAUDRATE	19200
+#endif
+
+#if defined (UART_SCONF_38400)
+#define CONFIG_BAUDRATE	38400
+#endif
+
+#if defined (UART_SCONF_57600)
+#define CONFIG_BAUDRATE	57600
+#endif
+
+#if defined (UART_SCONF_115200)
+#define CONFIG_BAUDRATE	115200
+#endif
+
+#if defined (UART_SCONF_230400)
+#define CONFIG_BAUDRATE	230400
+#endif
+
+#if defined (UART_SCONF_460800)
+#define CONFIG_BAUDRATE	460800
+#endif
 
 #if defined (MT7621_FPGA_BOARD) || defined (MT7621_ASIC_BOARD) || defined (MT7628_FPGA_BOARD) || defined (MT7628_ASIC_BOARD)
 #define RT2880_UART_RBR_OFFSET	0x00

@@ -32,6 +32,8 @@
 #include <rt_mmap.h>
 #include <spi_api.h>
 #include <nand_api.h>
+#include "../autoconf.h"
+#include "banner.c"
 
 DECLARE_GLOBAL_DATA_PTR;
 #undef DEBUG
@@ -534,7 +536,7 @@ static int init_func_ram (void)
 #endif
 	return (1);
 }
-
+/*
 static int display_banner(void)
 {
    
@@ -542,7 +544,6 @@ static int display_banner(void)
 	return (0);
 }
 
-/*
 static void display_flash_config(ulong size)
 {
 	puts ("Flash: ");
@@ -601,21 +602,6 @@ init_fnc_t *init_sequence[] = {
 };
 #endif
 
-//  
-void printBanner(void)
-{
-    printf("\n\n");
-    printf("  ██████╗  ███╗   ██╗ ██╗   ██╗ ██████╗  ███████╗ ███████╗\n");
-    printf(" ██╔════╝  ████╗  ██║ ██║   ██║ ██╔══██╗ ██╔════╝ ██╔════╝\n");
-    printf(" ██║  ███╗ ██╔██╗ ██║ ██║   ██║ ██████╔╝ █████╗   █████╗\n");
-    printf(" ██║   ██║ ██║╚██╗██║ ██║   ██║ ██╔══██╗ ██╔══╝   ██╔══╝\n");
-    printf(" ╚██████╔╝ ██║ ╚████║ ╚██████╔╝ ██████╔╝ ███████╗ ███████╗\n");
-    printf("  ╚═════╝  ╚═╝  ╚═══╝  ╚═════╝  ╚═════╝  ╚══════╝ ╚══════╝\n");
-	printf("\n");
-    printf("-------------------------------------------------------------------------\n");
-    printf("             https://github.com/gnubee-git\n");
-    printf("-------------------------------------------------------------------------\n");
-}
 __attribute__((nomips16)) void board_init_f(ulong bootflag)
 {
 	gd_t gd_data, *id;
@@ -738,6 +724,7 @@ __attribute__((nomips16)) void board_init_f(ulong bootflag)
 	init_baudrate();		/* initialze baudrate settings */
 	serial_init();		/* serial communications setup */
 	console_init_f();
+	printBanner(); /*display banner*/
 #if (TEXT_BASE == 0xBFC00000) || (TEXT_BASE == 0xBF000000) || (TEXT_BASE == 0xBC000000)
 #if defined (CONFIG_DDR_CAL)	
 	ptr = dram_cali;
@@ -896,17 +883,6 @@ __attribute__((nomips16)) void board_init_f(ulong bootflag)
 	/* NOTREACHED - relocate_code() does not return */
 }
 
-#define SEL_LOAD_LINUX_WRITE_FLASH_BY_SERIAL 0
-#define SEL_LOAD_LINUX_SDRAM            1
-#define SEL_LOAD_LINUX_WRITE_FLASH      2
-#define SEL_BOOT_FLASH                  3
-#define SEL_ENTER_CLI                   4
-#define SEL_LOAD_LINUX_WRITE_FLASH_BY_USB	5
-#define SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL 7
-#define SEL_LOAD_BOOT_SDRAM             8
-#define SEL_LOAD_BOOT_WRITE_FLASH       9
-#define SEL_LOAD_WEBPAGE		8
-
 
 /********************
  * GPIO stuff
@@ -1020,24 +996,64 @@ int reset_button_status(){
 	return 0;
 }
 
+/*
+#####################################
+Boot menu
+#####################################
+*/
+
+#define SEL_BOOT_FLASH                        0
+#define SEL_ENTER_CLI                         1               
+#define SEL_LOAD_WEBPAGE                      2
+#define SEL_LOAD_BOOT_WRITE_FLASH             3
+#define SEL_LOAD_LINUX_WRITE_FLASH_BY_USB     4
+#define SEL_LOAD_LINUX_WRITE_FLASH            5
+#define SEL_LOAD_LINUX_WRITE_FLASH_BY_SERIAL  6
+#define SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL   7
+#define SEL_LOAD_LINUX_SDRAM                  8             
+#define SEL_LOAD_BOOT_SDRAM                   9
+
+
+
 void OperationSelect(void)
 {
 	led_enable();
 	led_on();
 	printf("\nPlease choose the operation: \n");
-	printf("   %d: Load system code then write to Flash via SERIAL. \n", SEL_LOAD_LINUX_WRITE_FLASH_BY_SERIAL);
-	printf("   %d: Load system code to SDRAM via TFTP. \n", SEL_LOAD_LINUX_SDRAM);
-	printf("   %d: Load system code then write to Flash via TFTP. \n", SEL_LOAD_LINUX_WRITE_FLASH);
-	printf("   %d: Boot system code via Flash (default).\n", SEL_BOOT_FLASH);
+	
+ 	printf("   %d: Boot system. \n", SEL_BOOT_FLASH);
+ 
 #ifdef RALINK_CMDLINE
-	printf("   %d: Entr boot command line interface.\n", SEL_ENTER_CLI);
-#endif // RALINK_CMDLINE //
-	printf("   %d: Load system code then write to Flash via USB Storage.\n", SEL_LOAD_LINUX_WRITE_FLASH_BY_USB);
+	printf("   %d: Start CLI mode. \n", SEL_ENTER_CLI);
+#endif
+
+#ifdef BOOTM_WEB
+    printf("   %d: Start Web recovery mode. \n", SEL_LOAD_WEBPAGE);
+#endif
+
+#ifdef BOOTM_FUT
+	printf("   %d: Flash U-Boot via TFTP. \n", SEL_LOAD_BOOT_WRITE_FLASH);
+#endif
+
+#ifdef BOOTM_FFU
+	printf("   %d: Flash firmware from USB.\n", SEL_LOAD_LINUX_WRITE_FLASH_BY_USB);
+#endif
+
+#ifdef BOOTM_FFT
+	printf("   %d: Flash firmware via TFTP. \n", SEL_LOAD_LINUX_WRITE_FLASH);
+#endif
+
 #ifdef RALINK_UPGRADE_BY_SERIAL
-	printf("   %d: Load Boot Loader code then write to Flash via Serial. \n", SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL);
-#endif // RALINK_UPGRADE_BY_SERIAL //
-	printf("   %d: Start Web Server to load system code. \n", SEL_LOAD_WEBPAGE);
-	printf("   %d: Load Boot Loader code then write to Flash via TFTP. \n", SEL_LOAD_BOOT_WRITE_FLASH);
+	printf("   %d: Flash U-Boot via kermit. \n", SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL);
+#endif
+
+#ifdef BOOTM_FFK
+	printf("   %d: Flash firmware via kermit. \n", SEL_LOAD_LINUX_WRITE_FLASH_BY_SERIAL);
+#endif
+
+#ifdef BOOTM_FST
+	printf("   %d: Flash firmware to SDRAM via TFTP. \n", SEL_LOAD_LINUX_SDRAM);
+#endif
 }
 
 int tftp_config(int type, char *argv[])
@@ -1553,23 +1569,23 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	u32 reg = RALINK_REG(RT2880_RSTSTAT_REG);
 #ifndef CHANGEABLE_BAUDRATE
 	if(reg & RT2880_WDRST ){
-		printf("***********************\n");
+		printf("\n");
 		printf("Watchdog Reset Occurred\n");
-		printf("***********************\n");
+		printf("\n");
 		RALINK_REG(RT2880_RSTSTAT_REG)|=RT2880_WDRST;
 		RALINK_REG(RT2880_RSTSTAT_REG)&=~RT2880_WDRST;
 		trigger_hw_reset();
 	}else if(reg & RT2880_SWSYSRST){
-		printf("******************************\n");
+		printf("\n");
 		printf("Software System Reset Occurred\n");
-		printf("******************************\n");
+		printf("\n");
 		RALINK_REG(RT2880_RSTSTAT_REG)|=RT2880_SWSYSRST;
 		RALINK_REG(RT2880_RSTSTAT_REG)&=~RT2880_SWSYSRST;
 		trigger_hw_reset();
 	}else if (reg & RT2880_SWCPURST){
-		printf("***************************\n");
+		printf("\n");
 		printf("Software CPU Reset Occurred\n");
-		printf("***************************\n");
+		printf("\n");
 		RALINK_REG(RT2880_RSTSTAT_REG)|=RT2880_SWCPURST;
 		RALINK_REG(RT2880_RSTSTAT_REG)&=~RT2880_SWCPURST;
 		trigger_hw_reset();
@@ -1690,23 +1706,23 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	gd->baudrate =  simple_strtoul (s, NULL, 10);
 	serial_init();
 	if(reg & RT2880_WDRST ){
-		printf("***********************\n");
+		printf("\n");
 		printf("Watchdog Reset Occurred\n");
-		printf("***********************\n");
+		printf("\n");
 		RALINK_REG(RT2880_RSTSTAT_REG)|=RT2880_WDRST;
 		RALINK_REG(RT2880_RSTSTAT_REG)&=~RT2880_WDRST;
 		trigger_hw_reset();
 	}else if(reg & RT2880_SWSYSRST){
-		printf("******************************\n");
+		printf("\n");
 		printf("Software System Reset Occurred\n");
-		printf("******************************\n");
+		printf("\n");
 		RALINK_REG(RT2880_RSTSTAT_REG)|=RT2880_SWSYSRST;
 		RALINK_REG(RT2880_RSTSTAT_REG)&=~RT2880_SWSYSRST;
 		trigger_hw_reset();
 	}else if (reg & RT2880_SWCPURST){
-		printf("***************************\n");
+		printf("\n");
 		printf("Software CPU Reset Occurred\n");
-		printf("***************************\n");
+		printf("\n");
 		RALINK_REG(RT2880_RSTSTAT_REG)|=RT2880_SWCPURST;
 		RALINK_REG(RT2880_RSTSTAT_REG)&=~RT2880_SWCPURST;
 		trigger_hw_reset();
@@ -1784,9 +1800,9 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		int reg, boot_from_eeprom=0;
 		reg = RALINK_REG(RT2880_SYSCFG_REG);
 		/* Uboot Version and Configuration*/
-		printf("============================================ \n");
-		printf("Ralink UBoot Version: %s\n", RALINK_LOCAL_VERSION);
-		printf("-------------------------------------------- \n");
+		printf("\n");
+		printf("U-Boot Version: %s\n", RALINK_LOCAL_VERSION);
+		//printf("-------------------------------------------- \n");
 		printf("%s %s %s\n",CHIP_TYPE, CHIP_VERSION, GMAC_MODE);
 		boot_from_eeprom = ((reg>>18) & 0x01);
 		if(boot_from_eeprom){
@@ -1952,9 +1968,9 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			size = DRAM_SIZE;
 		}
 #endif
-		printf("============================================ \n");
-		printf("Ralink UBoot Version: %s\n", RALINK_LOCAL_VERSION);
-		printf("-------------------------------------------- \n");
+		printf("\n");
+		printf("U-Boot Version: %s\n", RALINK_LOCAL_VERSION);
+		//printf("-------------------------------------------- \n");
 		printf("%s %s %s\n",CHIP_TYPE, CHIP_VERSION, GMAC_MODE);
 #if defined (RT6855A_ASIC_BOARD) || defined (RT6855A_FPGA_BOARD)
 #if defined (RT6855A_FPGA_BOARD)
@@ -1992,9 +2008,9 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	}
 #elif (defined (MT7621_ASIC_BOARD) || defined (MT7621_FPGA_BOARD))
 	{
-	printf("============================================ \n");
-	printf("Ralink UBoot Version: %s\n", RALINK_LOCAL_VERSION);
-	printf("-------------------------------------------- \n");
+    printf("\n");
+	printf("U-Boot Version: %s\n", RALINK_LOCAL_VERSION);
+	//printf("-------------------------------------------- \n");
 #ifdef RALINK_DUAL_CORE_FUN	
 	printf("%s %s %s %s\n", CHIP_TYPE, RALINK_REG(RT2880_CHIP_REV_ID_REG)>>16&0x1 ? "MT7621A" : "MT7621N", "DualCore", GMAC_MODE);
 #else
@@ -2060,8 +2076,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		icache_ways *
 		icache_linesz;
 
-	printf("icache: sets:%d, ways:%d, linesz:%d ,total:%d\n", 
-			icache_sets, icache_ways, icache_linesz, icache_size);
+	// printf("icache: sets:%d, ways:%d, linesz:%d ,total:%d\n", 
+	// 		icache_sets, icache_ways, icache_linesz, icache_size);
 
 	/*
 	 * Now probe the MIPS32 / MIPS64 data cache.
@@ -2078,8 +2094,8 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		dcache_ways *
 		dcache_linesz;
 
-	printf("dcache: sets:%d, ways:%d, linesz:%d ,total:%d \n", 
-			dcache_sets, dcache_ways, dcache_linesz, dcache_size);
+	// printf("dcache: sets:%d, ways:%d, linesz:%d ,total:%d \n", 
+	// 		dcache_sets, dcache_ways, dcache_linesz, dcache_size);
 
 #endif
 
@@ -2165,7 +2181,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 				timer1 = 0;	/* no more delay	*/
 				BootType = getc();
 				if ((BootType < '0' || BootType > '5') && (BootType != '7') && (BootType != '8') && (BootType != '9'))
-					BootType = '3';
+					BootType = '0';
 				printf("\n\rYou chose %c\n\n", BootType);
 				break;
 			}
@@ -2231,7 +2247,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 		printf ("\b\b\b\b%2d ", timer1);
 	}
 	putc ('\n');
-	if(BootType == '3') {
+	if(BootType == '0') {
 		char *argv[2];
 		sprintf(addr_str, "0x%X", CFG_KERN_ADDR);
 		argv[1] = &addr_str[0];
@@ -2250,7 +2266,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 #endif
 
 		switch(BootType) {
-		case '1':
+		case '8':
 			printf("   \n%d: System Load Linux to SDRAM via TFTP. \n", SEL_LOAD_LINUX_SDRAM);
 			tftp_config(SEL_LOAD_LINUX_SDRAM, argv);           
 			argc= 3;
@@ -2258,7 +2274,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			do_tftpb(cmdtp, 0, argc, argv);
 			break;
 
-		case '2':
+		case '5':
 			printf("   \n%d: System Load Linux Kernel then write to Flash via TFTP. \n", SEL_LOAD_LINUX_WRITE_FLASH);
 			printf(" Warning!! Erase Linux in Flash then burn new one. Are you sure?(Y/N)\n");
 			confirm = getc();
@@ -2345,7 +2361,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			break;
 
 #ifdef RALINK_CMDLINE
-		case '4':
+		case '1':
 			printf("   \n%d: System Enter Boot Command Line Interface.\n", SEL_ENTER_CLI);
 			printf ("\n%s\n", version_string);
 			/* main_loop() can return to retry autoboot, if so just run it again. */
@@ -2402,11 +2418,11 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			do_reset(cmdtp, 0, argc, argv);
 			break;
 #endif // RALINK_UPGRADE_BY_SERIAL //
-		case '8':
+		case '2':
 				NetLoopHttpd();
 				break;
 #if 0
-		case '8':
+		case '2':
 			printf("   \n%d: System Load UBoot to SDRAM via TFTP. \n", SEL_LOAD_BOOT_SDRAM);
 			tftp_config(SEL_LOAD_BOOT_SDRAM, argv);
 			argc= 3;
@@ -2414,7 +2430,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			do_tftpb(cmdtp, 0, argc, argv);
 			break;
 #endif
-		case '9':
+		case '3':
 			printf("   \n%d: System Load Boot Loader then write to Flash via TFTP. \n", SEL_LOAD_BOOT_WRITE_FLASH);
 			printf(" Warning!! Erase Boot Loader in Flash then burn new one. Are you sure?(Y/N)\n");
 			confirm = getc();
@@ -2470,7 +2486,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 			break;
 #ifdef RALINK_UPGRADE_BY_SERIAL
 #if defined (CFG_ENV_IS_IN_NAND) || defined (CFG_ENV_IS_IN_SPI)
-		case '0':
+		case '6':
 			printf("\n%d: System Load Linux then write to Flash via Serial. \n", SEL_LOAD_LINUX_WRITE_FLASH_BY_SERIAL);
 			argc= 1;
 			setenv("autostart", "no");
@@ -2492,7 +2508,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 
 #if defined (RALINK_USB) || defined (MTK_USB)
 #if defined (CFG_ENV_IS_IN_NAND) || defined (CFG_ENV_IS_IN_SPI)
-		case '5':
+		case '4':
 			printf("\n%d: System Load Linux then write to Flash via USB Storage. \n", 5);
 
 			argc = 2;

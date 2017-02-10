@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "ralink_nand.h": "c",
+        "serial.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

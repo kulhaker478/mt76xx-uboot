@@ -25,12 +25,15 @@
  * This file contains the configuration parameters for the RT2880 board.
  */
 
+#include "../../autoconf.h"
+#include "../../board/rt2880/serial.h"
+
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-#define CFG_PROMPT "GnuBee > "
+// #define CFG_PROMPT "mt > "
 
-#define CONFIG_BOOTDELAY	5	/* autoboot after 5 seconds	*/
+// #define CONFIG_BOOTDELAY	3	/* autoboot after 3 seconds	*/
 
 #define CONFIG_NET_MULTI
 
@@ -38,15 +41,13 @@
 
 #define CONFIG_LED 44
 
-#define CONFIG_BAUDRATE	57600
-
 #define CHANGEABLE_BAUDRATE
 
-#define CONFIG_SERVERIP 192.168.1.2
+// #define CONFIG_SERVERIP 10.5.5.5
 
-#define CONFIG_IPADDR 192.168.1.213
+// #define CONFIG_IPADDR 10.5.5.6
 
-#define CONFIG_ETHADDR "00:AA:BB:CC:DD:13"
+// #define CONFIG_ETHADDR "00:AA:BB:CC:DD:13"
 
 #define SERIAL_CLOCK_DIVISOR 16
 
@@ -54,7 +55,8 @@
 
 #define CONFIG_GPIOENABLED yes
 
-/* valid baudrates */
+#define WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES		(192 * 1024)
+
 #define CFG_BAUDRATE_TABLE	{ 9600, 19200, 38400, 57600, 115200, 230400, 460800 }
 
 #ifndef __ASSEMBLY__ 
@@ -67,7 +69,6 @@ extern unsigned int  CFG_BLOCKSIZE;
 #endif
 #endif
 
-#include "../../autoconf.h"
 #define DEBUG				1
 //#define ET_DEBUG
 #define CONFIG_RT2880_ETH		1	/* Enable built-in 10/100 Ethernet */
@@ -539,13 +540,6 @@ extern unsigned int  CFG_BLOCKSIZE;
 #define WEBFAILSAFE_UPLOAD_KERNEL_ADDRESS			WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS + 0x50000
 #else
 #define WEBFAILSAFE_UPLOAD_KERNEL_ADDRESS			WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS + 0x20000
-#endif
-
-// U-Boot partition size
-#if defined(CONFIG_FOR_8DEVICES_CARAMBOLA2)
-#define WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES		(256 * 1024)
-#else
-#define WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES		(64 * 1024)
 #endif
 
 // ART partition size

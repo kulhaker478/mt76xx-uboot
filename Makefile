@@ -296,7 +296,7 @@ endif
 
 uboot.bin:	u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
-
+		./resizer.sh
 ifneq ($(MT7621_MP), y)
 uboot.img:	uboot.bin
 ifeq ($(CFG_ENV_IS), IN_SPI)
@@ -331,7 +331,7 @@ endif
 endif
 
 		@echo ""
-		@echo "===============<<IMPORTANT>>=================="
+#@echo "===============<<IMPORTANT>>=================="
 ifeq ($(ON_BOARD_NAND_FLASH_COMPONENT),y)
 		@echo "Notes:Uboot firmware is uboot.img NOT uboot.bin"
 		@rm -f uboot.bin

@@ -49,13 +49,18 @@ int do_http_upgrade(const ulong size, const int upgrade_type){
 	if(upgrade_type == WEBFAILSAFE_UPGRADE_TYPE_UBOOT){
 
 		printf("\n\n****************************\n*     U-BOOT UPGRADING     *\n* DO NOT POWER OFF DEVICE! *\n****************************\n\n");
-		sprintf(buf,
-				"erase 0x%lX +0x%lX; cp.b 0x%lX 0x%lX 0x%lX",
-				WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS,
-				WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES,
-				WEBFAILSAFE_UPLOAD_RAM_ADDRESS,
-				WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS,
-				WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES);
+        return( raspi_erase_write( ( u8_t * )WEBFAILSAFE_UPLOAD_RAM_ADDRESS, WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS - CFG_FLASH_BASE, WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES ) );
+
+		// sprintf(buf,
+		// 		"erase 0x%lX +0x%lX; cp.b 0x%lX 0x%lX 0x%lX",
+		// 		WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS,
+		// 		WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES,
+		// 		WEBFAILSAFE_UPLOAD_RAM_ADDRESS,
+		// 		WEBFAILSAFE_UPLOAD_UBOOT_ADDRESS,
+		// 		WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES);
+
+		// With the stock implementation of erase and write, 'cp' dropped into a syntax error, the fix was taken from here:
+        // https://github.com/OnionIoT/omega2-bootloader/blob/d00a82a03ff20dc092bfa611e3ef177dc30bef86/net/httpd.c#L70
 
 	} else if(upgrade_type == WEBFAILSAFE_UPGRADE_TYPE_FIRMWARE){
 

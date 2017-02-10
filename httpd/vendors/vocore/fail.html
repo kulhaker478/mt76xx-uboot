@@ -4,14 +4,16 @@
 		<meta charset="utf-8">
 		<title>Update Failed</title>
 		<link rel="stylesheet" href="style.css">
+		<link rel="icon" type="image/png" href="favicon.png">
 	</head>
 	<body>
-		<div id="main">
-		<h1><img src="logo_002.png">
-			<br>Update Failed</h1>
-			<p>Please, try again or contact with the author of this modification.<br>You can also get more information during update in U-Boot console.</p>
+		<div class="wrapper">
+			<h1 class="center">Update Failed</h1>
+			<div class="alert danger">
+				<strong>Something went wrong during the update</strong>
+				<p>You might have chosen a wrong file (too big or too small).</p>
+			</div>
 		</div>
-		<div class="foot">You can find more information about this project on <a href="https://github.com/pepe2k/u-boot_mod" target="_blank">GitHub</a></div>
-	</body>
+		<p class="center"><a href="javascript:history.back()">&#8592;&nbsp;Go Back</a></p>
 	</body>
 </html>

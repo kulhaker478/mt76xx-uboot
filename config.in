@@ -104,7 +104,7 @@ choice 'Ram/Rom version' "RAM UBOOT_RAM \
 bool "Dual Image" DUAL_IMAGE_SUPPORT
 
 bool "Partition LAN/WAN" LAN_WAN_PARTITION
-if [ "$LAN_WAN_PARTITION" = "y" ]; then
+if [ "$LAN_WAN_PARTITION" = "y" ]; then 	
  choice 'LAN/WAN Board Layout' "W/LLLL RALINK_DEMO_BOARD_PVLAN \
 		                LLLL/W RALINK_EV_BOARD_PVLAN 
 			       " W/LLLL
@@ -1510,6 +1510,46 @@ if [ "$MT7628_CPU_PLL_PARAMETERS" = "y" ]; then
 fi
 
 bool "Dual Image" DUAL_IMAGE_SUPPORT
+
+string 'Boot delay' CONFIG_BOOTDELAY 5
+
+string 'Shell prompt' CFG_PROMPT "mt7688 > "
+
+#string 'Size image U-Boot' WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES "192 * 1024"
+
+#Boot menu
+
+# comment "The order of options in the menu ----"
+
+# string 'Boot system' SEL_BOOT_FLASH                                              0
+# string 'Start CLI mode' SEL_ENTER_CLI                                            1    
+# string 'Start Web recovery mode' SEL_LOAD_WEBPAGE	                             2    
+
+# string 'Flash U-Boot to Flash via TFTP' SEL_LOAD_BOOT_WRITE_FLASH                3
+# string 'Flash firmware from USB storage' SEL_LOAD_LINUX_WRITE_FLASH_BY_USB       4
+# string 'Flash firmware to Flash via TFTP' SEL_LOAD_LINUX_WRITE_FLASH             5
+
+# string 'Flash firmware to Flash via kermit' SEL_LOAD_LINUX_WRITE_FLASH_BY_SERIAL 6
+# string 'Flash U-Boot to Flash via kermit' SEL_LOAD_BOOT_WRITE_FLASH_BY_SERIAL    7
+# string 'Flash firmware to SDRAM via TFTP' SEL_LOAD_LINUX_SDRAM                   8          
+                                                      	                                         
+comment "Displaying menu items ----"          
+
+bool "Start Web recovery mode"          BOOTM_WEB y
+bool "Flash firmware from USB"          BOOTM_FFU y
+bool "Flash U-Boot via TFTP"            BOOTM_FUT y
+
+bool "Flash firmware via TFTP"          BOOTM_FFT y
+bool "Flash firmware via kermit"        BOOTM_FFK n
+bool "Flash firmware to SDRAM via TFTP" BOOTM_FST n
+
+# Important note: that the 'disabled' 
+# options in the menu still have their own serial number, 
+# and in fact are simply not displayed
+
+#ETH config
+comment "ETH config ---"
+
 bool "ETH One Port Only" CONFIG_ETH_ONE_PORT_ONLY
 
 if [ "$CONFIG_ETH_ONE_PORT_ONLY" = "n" ]; then
@@ -1520,6 +1560,33 @@ if [ "$LAN_WAN_PARTITION" = "y" ]; then
                                "
 fi
 fi
+
+string 'Eth MAC addr' CONFIG_ETHADDR 00:AA:BB:CC:DD:13
+
+string 'Web flasher client IP' CONFIG_IPADDR 10.5.5.6
+
+string 'Web flasher server/host IP' CONFIG_SERVERIP 10.5.5.5
+
+#UART config
+comment "UART config ---"
+
+choice 'UART console port' "\
+                           UART0 UART_CONF_0 \
+                           UART1 UART_CONF_1    
+                           UART2 UART_CONF_2 \
+						   " UART0
+
+choice 'UART speed' "\
+                        9600 UART_SCONF_9600 \
+                        57600 UART_SCONF_57600 \
+						115200 UART_SCONF_115200 \
+						19200 UART_SCONF_19200    
+                        38400 UART_SCONF_38400 \
+						230400 UART_SCONF_230400 \
+						460800 UART_SCONF_460800
+						" 115200
+
+#######
 
 if [ "$UBOOT_RAM" = "y" ]; then
 define_hex TEXT_BASE  0x80200000

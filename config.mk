@@ -60,7 +60,7 @@ RALINK_SWITCH_DEBUG_FUN = OFF
 ifeq ($(ON_BOARD_NAND_FLASH_COMPONENT),y)
 RALINK_UPGRADE_BY_SERIAL = OFF
 else
-RALINK_UPGRADE_BY_SERIAL = ON
+#RALINK_UPGRADE_BY_SERIAL = ON
 endif
 RALINK_CMDLINE = ON
 RALINK_MDIO_ACCESS_FUN = ON
@@ -747,6 +747,54 @@ CFLAGS := $(CPPFLAGS) -Wall -Wstrict-prototypes \
 else
 CFLAGS := $(CPPFLAGS) -Wall -Wstrict-prototypes
 endif
+
+#########################################################################
+# UART config:
+
+#port
+ifeq ($(UART_CONF_0),y)
+CPPFLAGS += -DUART_CONF_0
+endif
+
+ifeq ($(UART_CONF_1),y)
+CPPFLAGS += -DUART_CONF_1
+endif
+
+ifeq ($(UART_CONF_2),y)
+CPPFLAGS += -DUART_CONF_2
+endif
+
+#speed
+#9600, 19200, 38400, 57600, 115200, 230400, 460800
+
+ifeq ($(UART_SCONF_9600),y)
+CPPFLAGS += -DUART_SCONF_9600
+endif
+
+ifeq ($(UART_SCONF_19200),y)
+CPPFLAGS += -DUART_SCONF_19200
+endif
+
+ifeq ($(UART_SCONF_38400),y)
+CPPFLAGS += -DUART_SCONF_38400
+endif
+
+ifeq ($(UART_SCONF_57600),y)
+CPPFLAGS += -DUART_SCONF_57600
+endif
+
+ifeq ($(UART_SCONF_115200),y)
+CPPFLAGS += -DUART_SCONF_115200
+endif
+
+ifeq ($(UART_SCONF_230400),y)
+CPPFLAGS += -DUART_SCONF_230400
+endif
+
+ifeq ($(UART_SCONF_460800),y)
+CPPFLAGS += -DUART_SCONF_460800
+endif
+#########################################################################
 
 # avoid trigraph warnings while parsing pci.h (produced by NIOS gcc-2.9)
 # this option have to be placed behind -Wall -- that's why it is here
