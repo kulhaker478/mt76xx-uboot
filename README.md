@@ -7,7 +7,7 @@ with the addition of a number of minor improvements:
 - Ability to set your shell promt  _(MT7688:# command)_
 - The ability to disable/enable the visibility of items in the loading menu (does not affect their order and numbering!)
 - The ability to set your IP/MAC for web and tftp flashers by default (does not affect previously recorded data in ENV!)
-- Small additions for web flasher: dark theme, favicon _(128px is probably a lot, because it weighs 12kb, but I'm too lazy to reduce *_* based on [Omega2 bootloader](https://github.com/OnionIoT/omega2-bootloader/tree/master/httpd/vendors/onion))_
+- Small additions for web flasher: dark theme, favicon _128px is probably a lot, because it weighs 12kb, but I'm too lazy to reduce :3, based on [Omega2 bootloader](https://github.com/OnionIoT/omega2-bootloader/tree/master/httpd/vendors/onion)
 
 A file has been added for proper assembly setup_env.sh by analogy with [Omega2 bootloader](https://github.com/OnionIoT/omega2-bootloader), before assembly and configuration, do not forget to run it:
 
