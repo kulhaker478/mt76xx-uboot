@@ -1,7 +1,10 @@
+# Fork u-boot from [GnuBee](https://github.com/gnubee-git/GnuBee-MT76x8-uboot) 
+
+![](https://sun9-19.userapi.com/impg/XYpC4unjh7pidDSJATlP3-Mz8QYz9gRdil8sDg/ixbj46ljT5Q.jpg?size=799x690&quality=96&sign=b79d71ee9bdb7445a88ce9f99b6d5295&type=album)
+
 ![](https://sun9-77.userapi.com/impg/Zy3-9mtL76ypF2m_bw5Egx9JarCQp3XFoC0gtw/E33zoVNm92s.jpg?size=1007x730&quality=96&sign=056a6779c34ab1f8953afca0021f2f87&type=album)
 
-# Fork u-boot from [GnuBee](https://github.com/gnubee-git/GnuBee-MT76x8-uboot) 
-with the addition of a number of minor improvements:
+🇬🇧 Fork adds a number of minor improvements:
 
 - Automatically enlarging the image to the one specified in WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES, by appending 0xFF (_see resizer.sh for details_)
 - Banner function is now a separate file for easier configuration
@@ -18,9 +21,8 @@ sh setup_env.sh
 ```
 
 ----------------------------------
-
-# Форк u-boot от [GnuBee](https://github.com/gnubee-git/GnuBee-MT76x8-uboot) 
-добавляющий ряд минорных улучшений (_в основном связанных со сборкой_):
+ 
+🇷🇺 Форк добавляет ряд минорных улучшений:
 
 - Автоматическое увеличение выходного .bin файла до размера указанного в дерективе WEBFAILSAFE_UPLOAD_UBOOT_SIZE_IN_BYTES, путём добавления 0xFF в конец файла
 - Функция баннера вынесена в отдельный файл для удобства изменения
