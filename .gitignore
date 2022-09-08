@@ -1,1 +1,5 @@
-.vscode
+.vscode/
+autoconf.h
+.config
+.menuconfig.log
+.tmp_config

@@ -1465,7 +1465,7 @@ __attribute__((nomips16)) void board_init_r (gd_t *id, ulong dest_addr)
 	bd_t *bd;
 	int i;
 	int timer1= CONFIG_BOOTDELAY;
-	unsigned char BootType='3', confirm=0;
+	unsigned char BootType='0', confirm=0;
 	int my_tmp;
 	int gotconnection;
 	char addr_str[11];

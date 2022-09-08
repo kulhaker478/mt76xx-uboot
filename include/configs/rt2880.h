@@ -33,7 +33,7 @@
 
 // #define CFG_PROMPT "mt > "
 
-// #define CONFIG_BOOTDELAY	3	/* autoboot after 3 seconds	*/
+#define CONFIG_BOOTDELAY	5	/* autoboot after 3 seconds	*/
 
 #define CONFIG_NET_MULTI
 

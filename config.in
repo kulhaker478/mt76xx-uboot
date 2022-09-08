@@ -1511,7 +1511,7 @@ fi
 
 bool "Dual Image" DUAL_IMAGE_SUPPORT
 
-string 'Boot delay' CONFIG_BOOTDELAY 5
+#string 'Boot delay' CONFIG_BOOTDELAY 5
 
 string 'Shell prompt' CFG_PROMPT "mt7688 > "
 
